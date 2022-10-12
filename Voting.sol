@@ -182,7 +182,7 @@ contract Voting is Ownable {
     //###########################################################################################################
     //déclaration du constructeur et de son import
     //###########################################################################################################
-    constructor()  Ownable() {
+    constructor()   {
 
         //lors de la creation du contrat
         //on détermine que le statut est le premier de la liste
@@ -199,10 +199,10 @@ contract Voting is Ownable {
     // ajoute les votants
     //########################################################
 
-    function ajouteVotant(address adresseNouveauVotant) public {
+    function ajouteVotant(address adresseNouveauVotant) public onlyOwner {
 
-        //controle l'accès de cette fonction qu'à l'administrateur du contrat 
-         _checkOwner() ;
+        //controle l'accès de cette fonction qu'à l'administrateur du contrat via le modifier hérité de Ownable
+        
 
         //Vérifie que nous sommes bien en phase d'ajout de votants
         require( uint(StatutVote) == 0 , "Nous ne sommes plus en ajout de votant ") ;
@@ -248,10 +248,9 @@ contract Voting is Ownable {
 
 
     //fonction qui renvoie le nombre de proposition
-    function annuleDernierAjoutVotant()  public view {
+    function annuleDernierAjoutVotant()  public view onlyOwner {
 
-        //controle l'accès de cette fonction qu'à l'administrateur du contrat 
-         _checkOwner() ;
+        //controle l'accès de cette fonction qu'à l'administrateur du contrat via le modifier hérité de Ownable
 
         //Vérifie que nous sommes bien en phase d'ajout de votants
         require( uint(StatutVote) == 0 , "Nous ne sommes pas en phase d'ajout de votants.") ;

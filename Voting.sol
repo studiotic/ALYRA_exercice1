@@ -97,10 +97,10 @@ contract Voting is Ownable {
     // Elle comprend une description sous la forme d'un boolen 
     //###########################################################################################################
     struct Voter {
-        address adressVotant;
-        bool isRegistered;
-        bool hasVoted;
-        uint votedProposalId;
+        address     adressDuVotant;
+        bool        isRegistered;
+        bool        hasVoted;
+        uint        votedProposalId;
     }
 
     //creation d'un tableau des votants basé sur la structure Voter
@@ -108,6 +108,8 @@ contract Voting is Ownable {
 
     //creation d'un entier qui va contenir le nombre de votants
     uint qteVoter ;  
+
+
 
     //###########################################################################################################
     //declaration de la structure d'une proposition de vote
@@ -124,20 +126,37 @@ contract Voting is Ownable {
     uint qteProposition ;  
 
 
+
+
+
     //###########################################################################################################
     //Events imposés
     //###########################################################################################################
-    event ProposalRegistered(string proposition, uint proposalId);
 
+    //sujet : deploiement contrat
+    event contratCree(address createur, uint statutVote);
+    
+    //sujet : votants
     event VoterRegistered(address voterAddress); 
 
+
+    //sujet : propositions
+    event ProposalRegistered(string proposition, uint proposalId);
+
+    
+    //sujet : pahse du vote
     event WorkflowStatusChange(uint WorkflowStatusPreviousStatus, uint WorkflowStatusNewStatus);
     
+    //
     event Voted (address voter, uint proposalId);
 
-    event contratCree(address createur, uint statutVote);
+    
 
     event VotantDejaAjoute(address createur, uint rang);
+
+    event propositionDejaAjoute(string propositionBis, uint rang);
+
+    event dernierVotantSupprime(address votantSupprime, uint QteVotantFinal);
 
     //###########################################################################################################
     //statuts de vote imposés
@@ -154,13 +173,15 @@ contract Voting is Ownable {
     //on cree une instance de l'enumération 
     WorkflowStatus public StatutVote ;
 
-    constructor(){
+    constructor()  Ownable() {
+
         //lors de la creation du contrat
         //on détermine que le statut est le premier de la liste
         StatutVote = WorkflowStatus.RegisteringVoters ; 
 
         address adminContrat = msg.sender ;
         emit contratCree(adminContrat , uint(StatutVote) ) ;
+
     }
 
 
@@ -169,52 +190,75 @@ contract Voting is Ownable {
     // ajoute les votants
     //########################################################
 
-    function ajouteVotant(address adresseVotant) public  {
+    function ajouteVotant(address adresseNouveauVotant) public {
 
-    //controle l'accès de cette fonction qu'à l'administrateur du contrat 
-    //onlyOwner() ;
+        //controle l'accès de cette fonction qu'à l'administrateur du contrat 
+         _checkOwner() ;
 
-    //Vérifie que nous sommes bien en phase d'ajout de votants
-    require( uint(StatutVote) > 0 , "Nous ne sommes plus en ajout de votant ") ;
+        //Vérifie que nous sommes bien en phase d'ajout de votants
+        require( uint(StatutVote) == 0 , "Nous ne sommes plus en ajout de votant ") ;
 
-    //vérifie que le votant n'est pas déjà enregistré
-    qteVoter = tableauDesVotants.length ;
+        //vérifie que le votant n'est pas déjà enregistré
+        qteVoter = tableauDesVotants.length ;
 
-    bool isPresent ; 
+        bool isPresent ; 
 
-    for (i=0 , i++ , i>qteVoter){
-        if (tableauDesVotants[i].adresseVotant ==adresseVotant ) then { 
-            isPresent = true ;
-            //emet un event pour signaler ajout en doublon
-            emit VotantDejaAjoute(adresseVotant ,i) ;
+            for (uint8 i=0 ; i > qteVoter; i++  ){
+
+                if (tableauDesVotants[i].adressDuVotant == adresseNouveauVotant ) { 
+                //le votant existe deja
+                isPresent = true ;
+
+                //emet un event pour signaler ajout en doublon
+                emit VotantDejaAjoute(adresseNouveauVotant , i) ;
+                }
+
             }
+   
+
+        require( isPresent == true ,  "Ce votant exite deja !") ;
+
+
+        //vérifie que l'adresse est bien une adresse
+
+
+        //cree le votant
+        Voter memory nouveauVotant  ;
+        nouveauVotant.adressDuVotant    = adresseNouveauVotant ;
+        nouveauVotant.isRegistered      = true ;
+        nouveauVotant.hasVoted          = false ;
+        nouveauVotant.votedProposalId   = 0 ;
+        
+        //ajoute un votant
+        tableauDesVotants.push(nouveauVotant)  ;
+
+        //emet l'event de confirmation
+        emit VoterRegistered(adresseNouveauVotant) ; 
+
     }
 
-    require( isPresent, unicode "Ce votant exite déjà !") ;
 
+    //fonction qui renvoie le nombre de proposition
+    function annuleDernierAjoutVotant() public {
 
-    //vérifie que l'adresse est bien une adresse
+        //controle l'accès de cette fonction qu'à l'administrateur du contrat 
+         _checkOwner() ;
 
+        //Vérifie que nous sommes bien en phase d'ajout de votants
+        require( uint(StatutVote) == 0 , "Nous ne sommes pas en phase d'ajout de votants.") ;
 
-    //cree le votant
-    Voter memory nouveauVotant  ;
-    nouveauVotant.adressVotant      = adresseVotant ;
-    nouveauVotant.isRegistered      = true ;
-    nouveauVotant.hasVoted          = false ;
-    nouveauVotant.votedProposalId   = 0 ;
-    
-    //ajoute un votant
-    tableauDesVotants.push(nouveauVotant)  ;
-
-    //emet l'event de confirmation
-    emit VoterRegistered(adresseVotant) ; 
+        //ajoute un votant
+        tableauDesVotants.pop  ; 
 
     }
 
 
+    //########################################################
+    //temps 2
+    // Change la phase de vote
+    //########################################################
 
-
-    function changePhaseVote() public returns(uint){
+    function changePhaseVote() public returns(uint) {
 
     //controle l'accès de cette fonction qu'à l'administrateur du contrat 
     //onlyOwner() ;
@@ -241,38 +285,61 @@ contract Voting is Ownable {
     //statut 3 : VotingSessionStarted,
     //statut 4 : VotingSessionEnded,
     //statut 5 : VotesTallied
+
     }
 
 
-/*
 
 
 
     //########################################################
-    //temps 2
+    //temps 3
     // ajoute les propositions
     //########################################################
 
-    function ajouteProposition(string nouvelleProposition) public   {
+
+    //fonction qui renvoie le nombre de proposition
+    function CombienProposition() public returns(uint){
+
+        //evalue la quantité de propositions
+        qteProposition = tableauProposition.length;  
+
+        //renvoie le nombre de propositions
+        return qteProposition;
+    }
+
+
+
+
+    function ajouteProposition(string memory nouvelleProposition) public   {
 
         //l'accès de cette fonction est ouverte à tous les votant et à l'administrateur 
-        
-        //
+        //donc pas de controle
 
         //vérifie que l'on est bien dans la phase de l'ajout des proposition
-        
+        require( uint(StatutVote) == 1 , "Nous ne sommes pas en phase d'ajout de votant") ;
 
         //verifie que la proposition n'a pas déjà été proposée
-        qteProposition = proposition.length;   
+        qteProposition = tableauProposition.length;   
 
 
-        //
+        //cree une instance de la structure proposition
+        Proposal memory nouvelleProposition  ;
+        nouvelleProposition.description    = nouvelleProposition ;
+        
+        
+        //ajoute une proposition
+        tableauProposition.push(nouvelleProposition)  ;
+
+        //emet l'event de confirmation
+        emit VoterRegistered(adresseNouveauVotant) ; 
+
 
         //ajoute la nouvelle proposition au tableau
-        proposition[].push(nouvelleProposition);
+        tableauProposition.push(nouvelleProposition);
 
         //met à jour le nombre de propositions
-        qteProposition = proposition[].length;
+        qteProposition = tableauProposition[].length;
 
         //avant d'emettre l'event accompagné de l'index de la proposition
         //on effectue un calcul pour déterminer l'id (proposition 1 = ID 0)
@@ -284,6 +351,6 @@ contract Voting is Ownable {
 
 
     }
-*/
+
 
 }

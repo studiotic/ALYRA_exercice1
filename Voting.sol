@@ -140,6 +140,7 @@ contract Voting is Ownable {
     event VoterRegistered(address voterAddress); 
     event VotantDejaAjoute(address createur, uint rang);
     event VotantNonTrouve(address createur);
+    event VotantDejaVote(address createur , uint sonVote);
     event dernierVotantSupprime(address votantSupprime, uint QteVotantFinal);
 
     //sujet : propositions
@@ -224,7 +225,7 @@ contract Voting is Ownable {
             }
    
 
-        require( isPresent == true ,  "Ce votant exite deja !") ;
+        require( isPresent == false ,  "Ce votant exite deja !") ;
 
 
         //vérifie que l'adresse est bien une adresse
@@ -394,21 +395,21 @@ contract Voting is Ownable {
                     //le votant existe et a été trouvé
                     isPresent = true ;
 
-                    if (tableauDesVotants[i].hasVoted == 1 ) {
+                    if (tableauDesVotants[i].hasVoted = true ) {
                         hasVoted = true; 
                     }
 
 
-                    //emet le l'event du 
+                    //test si a déjà voté
                     if (hasVoted == true ) {
                         //emet un event pour signaler ajout en doublon
-                        emit VotantDejaAjoute(adresseVotant , i) ;
+                        emit VotantDejaVote(adresseVotant , tableauDesVotants[i].votedProposalId) ;
                     }
 
                     //sort si ce votant à déjà voté
                     require(hasVoted == false ,"Ce votant a deja vote" ) ; 
 
-                    //procede au vote
+                    //procede au vote en complétant le tableau
                     tableauDesVotants[i].votedProposalId = ChoixVote1N ;
                     tableauDesVotants[i].hasVoted = true ;
 
@@ -436,6 +437,4 @@ contract Voting is Ownable {
 
 
 
-       bool        isRegistered;
-        bool        hasVoted;
-        uint        votedProposalId;
+  

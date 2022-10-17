@@ -1,18 +1,21 @@
 # ALYRA
-Exercices ALYRA
+Exercice 1 ALYRA
+Sébastien HOFF
+Promotion RinbekyALYRA-HOFF
+
 
 Principe de fonctionnement : 
 
-l'administrateur gère un vote basé respectant un fil d'ariane avec les étapes imposées dans l'enoncé du devoir. 
+Ce contrat permet de gérer un vote sur un nombre non limité de votant et de propositionALYRA-HOFFs
+Ce contrat gère un second tour en cas d'un ou plusieurs exaequos au premier tour grace à une factorisation du code
 
-améliorations : ce script gère un second tour en cas d'un ou plusieurs exaequo.
 
-mode d'emploi
+Mode d'emploi
 
 1) déployer le contrat
 
 
-2) saisir les adresse Eth des votants via la fonction ajoutVotant.
+2) saisir les adresse Ethereum des votants via la fonction ajoutVotant.
  
 Un controle d'unicité est appliqué à toute nouvelle proposition de votant.
 
@@ -35,32 +38,33 @@ etape 2 : vote
 etape 3 : dépouillement 
 
 
-4)saisir les propositions de vote en complétant le champs ajoutProposition.
+4) Saisir les propositions de vote en complétant le champs ajoutProposition.
 
 Un controle d'unicité est appliqué à toute nouvelle proposition.
 
 En cas d'erreur de saisie la fonction annuleDerniereProposition(orange) permet d'effacer la dernière entrée
 
-Pour connaitre le nombre de propositions utiliser la fonction getPropositions(bleu) 
+Pour connaitre le nombre de propositions utiliser la fonction getPropositions(bleu). 
 
+En cas de second tour cette fonction renvera toujours le nombre de propositions totales car nous conservons les archives de tous les votes et des résultats consolidés au niveau des propositions permettant le controle a posteriori
 
 5) pour passer à l'étape suivante du vote cliquer sur la fonction nextStep (orange). 
 
-
-
-6)l'étape 3, est le debut de la session de vote.
-
+6)l'étape 3, est le debut de la session de vote. VotingSession started
 
 Compléter le vote en saisissant le numéro de la proposition : de 1 à N
 
-pour obtenir de l'aide sur le choix des propositions, la fonction getlibelleProposition affiche le numéro de la proposition et son intitulé. Si nous sommes rendu à la phase 5, cette fonction renvoie également les résultats
+un système controle l'unicité du vote, la validité des choix de vote et que le votant est whitelisté
+
+pour obtenir de l'aide sur le choix des propositions, la fonction getlibelleProposition affiche le numéro de la proposition et son intitulé. 
+
+(en phase 5 de dépouillement , cette fonction renvoie également les résultats)
 
 
-5) pour passer à l'étape suivante du vote cliquer sur la fonction nextStep (orange).
- 
-une fois que vous avez clos l'etape du vote, vous pouvez cliquer sur la fonction dépouillement
+7) une fois que vous avez clos l'etape du vote, vous pouvez cliquer sur la fonction dépouillement
 
 on aurait pu lancer automatiquement le dépouillement via la fonction nextstep mais j'ai préféré que l'administrateur garde le controle des phases
+
 
 6) le dépouillement est lancé via la fonction éponyme dépouillement
 
@@ -75,7 +79,7 @@ Cas des resultats exaequos :
 le second tour se déroule de la manière suivant : 
 
 - on prepare les données pour le second tour via le bouton LanceSecondTour
-- on repasse automatiquement en phase de vote
+- on repasse automatiquement en phase 3 de vote
 
 Chaque votant enregistré peut revoter pour les propositions qui participent au second tour.
 
@@ -95,13 +99,17 @@ getLibellé : permet à tout moment pour le votant de connaitre quelle propositi
 
 getResults : permet de connaitre apres le dépouillement (phase 5) les résultats en cycle pour chaque propositions. chaque clic passe à la proposition suivante
 
-Pour le correcteur et dans le cadre de cet exercice uniquement pour faciliter la correction
-un jeu de données est mis à disposition pour illustrer le fonctionnement avec des données de 7 votants pour un vote avec 2 aexequos au premier tour et  1 gagnant au second tour
+
+################
+IMPORTANT
+################
+Pour le correcteur et uniquement dans le cadre de cet exercice pour faciliter la correction
+un jeu de données est mis à disposition pour illustrer le fonctionnement avec des données de 7 votants pour un vote avec 2 aexequos au premier tour et  1 gagnant au second tour.
 
 mode operatoire : après le deploiement du contrat cliquer sur dataGenerator(orange) 
-vous retrouvez en statut 3 de vote VotingSession started
-un premier clic sur next step cloturera le vote
-un deuxième clic sur nexstep basculera en depouillement
+vous retrouvez en statut 3 VotingSession started
+reprennez à l'étape 5 ci-dessus
+
 
 
 

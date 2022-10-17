@@ -52,33 +52,28 @@ En cas de second tour cette fonction renvera toujours le nombre de propositions 
 
 5) pour passer à l'étape suivante du vote cliquer sur la fonction nextStep (orange). 
 
-6)l'étape 3, est le debut de la session de vote. VotingSession started
+6) l'étape 3 VotingSession started , est le debut de la session de vote.
 
 Compléter le vote en saisissant le numéro de la proposition : de 1 à N
 
-un système controle l'unicité du vote, la validité des choix de vote et que le votant est whitelisté
+Un système controle l'unicité du vote, la validité des choix de vote et que le votant est whitelisté et correspond au msg.sender
 
-pour obtenir de l'aide sur le choix des propositions, la fonction getlibelleProposition affiche le numéro de la proposition et son intitulé. 
-
-(en phase 5 de dépouillement , cette fonction renvoie également les résultats)
-
+Pour obtenir de l'aide sur le choix des propositions, la fonction getlibelleProposition affiche le numéro de la proposition et son intitulé.(en phase 5 de dépouillement , cette fonction renvoie également les résultats)
 
 7) une fois que vous avez clos l'etape du vote, vous pouvez cliquer sur la fonction dépouillement
 
 on aurait pu lancer automatiquement le dépouillement via la fonction nextstep mais j'ai préféré que l'administrateur garde le controle des phases
 
+8) le dépouillement est lancé via la fonction éponyme dépouillement une fois en phase 5
 
-6) le dépouillement est lancé via la fonction éponyme dépouillement
+9) la fonction getWinner renvoie le nom de la proposition gagnante et son score en nombre de voix. 
 
-7) la fonction getWinner renvoie le nom de la proposition gagnante et son score en nombre de voix. 
-
-En cas de resultats exaequos. la fonction annonce necessité d'un second tour si des propositions enregistrent le meme nombre de voix
+En cas de resultats exaequos. la fonction annonce la necessité d'un second tour si des propositions totalisent le meme nombre de voix
 
 
 Cas des resultats exaequos :
 
-##################################################
-le second tour se déroule de la manière suivant : 
+10) le second tour se déroule de la manière suivant : 
 
 - on prepare les données pour le second tour via le bouton LanceSecondTour
 - on repasse automatiquement en phase 3 de vote
@@ -89,7 +84,7 @@ on controle que le choix est autorisé et que le votant est bien enregistré et 
 
 8) pour passer à l'étape suivante du vote cliquer sur la fonction nextStep (orange). 
 
-9) le dépouillement est lancé via la fonction eponyme depouillement
+9) le dépouillement est lancé via la fonction eponyme depouillement une fois rendu en phase 5
 
 10) la fonction getWinner renvoie le nom de la proposition gagnante et son score en nombre de voix. 
 En cas de resultats exaequos le cas n'est pas traité.
@@ -101,17 +96,24 @@ getLibellé : permet à tout moment pour le votant de connaitre quelle propositi
 
 getResults : permet de connaitre apres le dépouillement (phase 5) les résultats en cycle pour chaque propositions. chaque clic passe à la proposition suivante
 
+Une fonction de reset aurait pu etre développé simplement mais n'a pas été demandée dans l'enoncé. 
+
+C'est une décision d'ethique personnelle car elle permettait à l'administrateur de supprimer les résultats d'un vote ce qui va un peu à l'encontre de l'éternité des données sur la blockchain et la possibilité pour quiconque de controler les résultats a posteriori. 
+
+Autre évolution possible
+Rajouter une structure pour gérer les campagnes de votes grace à un idVote permettant au contrat de gérer plusieurs campagnes de votes en parallèle.
 
 ################
 IMPORTANT
 ################
-Pour le correcteur et uniquement dans le cadre de cet exercice pour faciliter la correction
-un jeu de données est mis à disposition pour illustrer le fonctionnement avec des données de 7 votants pour un vote avec 2 aexequos au premier tour et  1 gagnant au second tour.
+Pour le correcteur et uniquement dans le cadre de cet exercice pour faciliter la correction. 
+Un jeu de données est mis à disposition pour illustrer le fonctionnement avec des données de 7 votants pour un vote avec 2 aexequos au premier tour et  1 gagnant au second tour.
 
 mode operatoire : après le deploiement du contrat cliquer sur dataGenerator(orange) 
 vous retrouvez en statut 3 VotingSession started
 reprennez à l'étape 5 ci-dessus
 
+Merci.
 
 
 

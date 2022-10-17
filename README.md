@@ -1,16 +1,18 @@
 # ALYRA
-Exercice 1 ALYRA
+Exercice 1 
 Sébastien HOFF
-Promotion RinbekyALYRA-HOFF
+
+Promotion Rinbeky
 
 
 Principe de fonctionnement : 
 
-Ce contrat permet de gérer un vote sur un nombre non limité de votant et de propositionALYRA-HOFFs
-Ce contrat gère un second tour en cas d'un ou plusieurs exaequos au premier tour grace à une factorisation du code
+Ce contrat permet de gérer un vote sur un nombre important de votants et de propositions
+Ce contrat gère également un second tour en cas d'un ou plusieurs exaequos au premier tour
 
 
 Mode d'emploi
+##############
 
 1) déployer le contrat
 
